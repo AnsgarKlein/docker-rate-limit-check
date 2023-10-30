@@ -1,0 +1,5 @@
+mypy==1.6.*
+pydoclint==0.3.*
+pylint==3.0.*
+pytype==2024.2.13
+types-requests==2.31.*

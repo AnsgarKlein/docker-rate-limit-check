@@ -1,0 +1,13 @@
+# Python environment
+/.env/
+/.venv/
+/env/
+/venv/
+/ENV/
+/VENV/
+
+# mypy
+/.mypy_cache/
+
+# pytype
+/.pytype/

@@ -1,0 +1,42 @@
+# NOTE: All relative paths are relative to the location of this file.
+[tool.pytype]
+
+# List of files or directories to exclude.
+exclude = [
+    '.env/',
+    '.venv/',
+    'env/',
+    'venv/',
+    'ENV/',
+    'VENV/'
+]
+
+
+# Space-separated list of files or directories to process.
+inputs = [
+    '.',
+]
+
+# Keep going past errors to analyze as many files as possible.
+keep_going = true
+
+# Run N jobs in parallel. When 'auto' is used, this will be equivalent to the
+# number of CPUs on the host system.
+jobs = 'auto'
+
+# All pytype output goes here.
+output = '.pytype'
+
+# Platform (e.g., "linux", "win32") that the target code runs on.
+platform = 'linux'
+
+# Paths to source code directories, separated by ':'.
+pythonpath = '.'
+
+# Opt-in: Do not allow Any as a return type.
+no_return_any = true
+
+# Space-separated list of error names to ignore.
+disable = [
+    'pyi-error',
+]
