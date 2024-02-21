@@ -44,13 +44,18 @@ class DockerRateLimit():
     rate_limit_remaining: int
     ip: Optional[str]=None
 
+    @property
+    def rate_limit_used(self) -> int:
+        return self.rate_limit_max - self.rate_limit_remaining
+
     def asdict(self) -> Dict[str, Union[Optional[str], int]]:
         """Return attributes of this object as dictionary"""
 
         dictionary = {
             'rate_limit_max': self.rate_limit_max,
             'rate_limit_remaining': self.rate_limit_remaining,
-            'ip': self.ip
+            'ip': self.ip,
+            'rate_limit_used': self.rate_limit_used,
         }
         return dictionary
 
