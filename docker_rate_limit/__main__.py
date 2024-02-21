@@ -28,7 +28,7 @@ def main():
     """Main"""
 
     rate_limit_info = get_rate_limit()
-    rate_limit_json = json.dumps(rate_limit_info._asdict())
+    rate_limit_json = json.dumps(rate_limit_info._asdict(), indent=4)
     print(rate_limit_json)
 
 if __name__ == '__main__':
