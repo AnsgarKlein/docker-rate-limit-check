@@ -20,7 +20,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from docker_rate_limit.__main__ import main
+import json
+
+from .docker_hub import get_rate_limit
+
+def main():
+    """Main"""
+
+    rate_limit_info = get_rate_limit()
+    rate_limit_json = json.dumps(rate_limit_info._asdict())
+    print(rate_limit_json)
 
 if __name__ == '__main__':
     main()

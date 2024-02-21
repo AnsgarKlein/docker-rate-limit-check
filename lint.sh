@@ -1,11 +1,12 @@
 #!/bin/bash
 
-PYTHON_FILES='*.py'
+PYTHON_BIN='docker-rate-limit.py'
+PYTHON_MOD='docker_rate_limit'
 
-mypy $PYTHON_FILES
+mypy $PYTHON_BIN $PYTHON_MOD
 
-pylint $PYTHON_FILES
+pylint $PYTHON_BIN $PYTHON_MOD
 
-pydoclint $PYTHON_FILES
+pydoclint $PYTHON_BIN $PYTHON_MOD
 
-pytype $PYTHON_FILES
+pytype $PYTHON_BIN $PYTHON_MOD
