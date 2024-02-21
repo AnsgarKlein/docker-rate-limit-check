@@ -20,11 +20,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+from dataclasses import dataclass
 import re
 import sys
 
-from typing import NamedTuple
+from typing import Dict
 from typing import Optional
+from typing import Union
 
 import requests
 from requests.exceptions import RequestException
@@ -34,12 +36,23 @@ TOKEN_RECEIVE_ENDPOINT = 'https://auth.docker.io/token?service=registry.docker.i
 RATE_LIMIT_ENDPOINT = 'https://registry-1.docker.io/v2/ratelimitpreview/test/manifests/latest'
 
 
-class DockerRateLimit(NamedTuple):
+@dataclass
+class DockerRateLimit():
     """Contains information about Docker Hub rate limiting"""
 
     rate_limit_max: int
     rate_limit_remaining: int
     ip: Optional[str]=None
+
+    def asdict(self) -> Dict[str, Union[Optional[str], int]]:
+        """Return attributes of this object as dictionary"""
+
+        dictionary = {
+            'rate_limit_max': self.rate_limit_max,
+            'rate_limit_remaining': self.rate_limit_remaining,
+            'ip': self.ip
+        }
+        return dictionary
 
 def request_token(user: Optional[str]=None, password: Optional[str]=None) -> str:
     """Request token to authorize to Docker Hub with"""
