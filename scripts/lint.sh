@@ -12,7 +12,7 @@ echo ''
 echo ''
 
 echo 'Running pylint...'
-pylint --rcfile .pylintrc.toml $PYTHON_MOD
+pylint $PYTHON_MOD
 echo ''
 echo ''
 
