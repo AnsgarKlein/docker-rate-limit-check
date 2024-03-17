@@ -21,6 +21,7 @@
 # SOFTWARE.
 
 from dataclasses import dataclass
+import json
 import re
 import sys
 
@@ -30,6 +31,7 @@ from typing import Union
 
 import requests
 from requests.exceptions import RequestException
+import yaml
 
 
 TOKEN_RECEIVE_ENDPOINT = 'https://auth.docker.io/token?service=registry.docker.io&scope=repository:ratelimitpreview/test:pull'
@@ -62,6 +64,27 @@ class DockerRateLimit():
             'rate_limit_used'
         ]
         return {a: getattr(self, a) for a in attrs}
+
+    def to_json(self, indent: int=4) -> str:
+        """
+        Return attributes of this object as JSON string
+
+        :param indent: Number of spaces for indentation
+        :return: JSON formatted string representation of this object
+        """
+
+        dict_representation = self.asdict()
+        return json.dumps(dict_representation, indent=indent)
+
+    def to_yaml(self) -> str:
+        """
+        Return attributes of this object as YAML string
+
+        :return: YAML formatted string representation of this object
+        """
+
+        dict_representation = self.asdict()
+        return yaml.safe_dump(dict_representation, explicit_start=True)
 
 def request_token(user: Optional[str]=None, password: Optional[str]=None) -> str:
     """
