@@ -6,10 +6,20 @@ cd "$PROJECT_ROOT"
 
 PYTHON_MOD='docker_rate_limit'
 
+echo 'Running mypy...'
 mypy $PYTHON_MOD
+echo ''
+echo ''
 
+echo 'Running pylint...'
 pylint --rcfile .pylintrc.toml $PYTHON_MOD
+echo ''
+echo ''
 
+echo 'Running pydoclint...'
 pydoclint $PYTHON_MOD
+echo ''
+echo ''
 
+echo 'Running pytype...'
 pytype $PYTHON_MOD

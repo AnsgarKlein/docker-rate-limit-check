@@ -32,6 +32,34 @@ warn_unreachable = true
 
 
 
+[tool.pydoclint]
+# Style of docstring being used
+style = 'sphinx'
+
+# Whether to show filename in every violation or group by file
+show-filenames-in-every-violation-message = false
+
+
+arg-type-hints-in-signature = true
+
+arg-type-hints-in-docstring = false
+
+
+check-arg-order = true
+
+skip-checking-short-docstrings = false
+
+skip-checking-raises = false
+
+require-return-section-when-returning-nothing = false
+
+check-return-types = false
+
+check-yield-types = true
+
+
+
+
 # NOTE: All relative paths are relative to the location of this file.
 [tool.pytype]
 
