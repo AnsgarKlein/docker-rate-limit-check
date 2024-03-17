@@ -51,13 +51,13 @@ class DockerRateLimit():
     def asdict(self) -> Dict[str, Union[Optional[str], int]]:
         """Return attributes of this object as dictionary"""
 
-        dictionary = {
-            'rate_limit_max': self.rate_limit_max,
-            'rate_limit_remaining': self.rate_limit_remaining,
-            'ip': self.ip,
-            'rate_limit_used': self.rate_limit_used,
-        }
-        return dictionary
+        attrs = [
+            'rate_limit_max',
+            'rate_limit_remaining',
+            'ip',
+            'rate_limit_used'
+        ]
+        return {a: getattr(self, a) for a in attrs}
 
 def request_token(user: Optional[str]=None, password: Optional[str]=None) -> str:
     """Request token to authorize to Docker Hub with"""
