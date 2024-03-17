@@ -24,8 +24,8 @@ import json
 
 from .docker_hub import get_rate_limit
 
-def main():
-    """Main"""
+def main() -> None:
+    """Main application entry point"""
 
     rate_limit_info = get_rate_limit()
     rate_limit_json = json.dumps(rate_limit_info.asdict(), indent=4)

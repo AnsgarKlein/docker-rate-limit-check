@@ -45,11 +45,15 @@ class DockerRateLimit():
     ip: Optional[str]=None
 
     @property
-    def rate_limit_used(self) -> int:
+    def rate_limit_used(self) -> int:  # pylint: disable=missing-function-docstring
         return self.rate_limit_max - self.rate_limit_remaining
 
     def asdict(self) -> Dict[str, Union[Optional[str], int]]:
-        """Return attributes of this object as dictionary"""
+        """
+        Return attributes of this object as dictionary.
+
+        :return: Dictionary representation of this object
+        """
 
         attrs = [
             'rate_limit_max',
@@ -60,7 +64,20 @@ class DockerRateLimit():
         return {a: getattr(self, a) for a in attrs}
 
 def request_token(user: Optional[str]=None, password: Optional[str]=None) -> str:
-    """Request token to authorize to Docker Hub with"""
+    """
+    Request token to authorize to Docker Hub with
+
+    :param user: User to request token for.
+        None for anonymous token.
+    :param password: Password for user to request token for.
+        None for anonymous token.
+    :raises KeyError: If JSON returned by Docker Hub is malformed and
+        does not contain expected keys.
+    :raises RequestException: If Docker Hub does not respond with status code
+        HTTP-200.
+    :return: Token for given user or anonymous token to authorize to Docker
+        Hub with
+    """
 
     if user is not None and password is not None:
         req = requests.get(TOKEN_RECEIVE_ENDPOINT, timeout=10, auth=(user, password))
@@ -88,7 +105,17 @@ def request_token(user: Optional[str]=None, password: Optional[str]=None) -> str
     return str(response_json['token'])
 
 def get_rate_limit(token: Optional[str]=None) -> DockerRateLimit:
-    """Returns information about Docker Hub rate limiting"""
+    """
+    Returns information about Docker Hub rate limiting
+
+    :param token: Token to authenticate to Docker Hub with.
+        Set to None to use an anonymous token.
+    :raises KeyError: If JSON returned by Docker Hub is missing malformed and
+        does not contain expected keys.
+    :raises RequestException: If Docker Hub does not respond with status code
+        HTTP-200 or HTTP-429.
+    :return: Information about rate limit returned by Docker Hub
+    """
 
     if token is None:
         token = request_token()
