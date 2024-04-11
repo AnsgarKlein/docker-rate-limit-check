@@ -7,6 +7,7 @@ from typing_extensions import Annotated
 import typer
 
 from .docker_hub import get_rate_limit
+from .http_server import DockerRateLimitHTTPServer
 
 
 app = typer.Typer(
@@ -48,17 +49,29 @@ def query(
     print(output)
 
 @app.command(help='''
-    not yet implemented''')
-def http() -> None:
+Run HTTP server that responds with rate limit''')
+def http(
+        port: Annotated[int, typer.Option(
+            '--port', '-p',
+            metavar='PORT',
+            help='''
+            Port to listen on''')],
+        host: Annotated[str, typer.Option(
+            '--host',
+            metavar='HOST',
+            help='''
+            Host to bind on''')]='0.0.0.0'
+    ) -> None:
     """
     Run http server to abstract calls to Docker Hub
-    (not yet implemented)
 
-    :raises Exception: Not yet implemented
+    :param port: Port to listen on
+    :param host: Host to bind on
     """
 
-    print('Not yet implemented')
-    raise typer.Exit(code=1)
+    # Start server
+    server = DockerRateLimitHTTPServer(host=host, port=port)
+    server.serve_forever()
 
 def main() -> None:
     """Main application entry point"""
