@@ -2,6 +2,9 @@
 
 from http.server import HTTPServer
 from http.server import BaseHTTPRequestHandler
+import sys
+
+from typing import Any
 
 from .docker_hub import get_rate_limit
 
@@ -23,6 +26,13 @@ class DockerRateLimitRequestHandler(BaseHTTPRequestHandler):
     Request handler for basic HTTP server.
     Answers with the current Docker Hub rate limit to GET requests.
     """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        # Set content of "Server" response header
+        self.server_version = __name__
+        self.sys_version = f'Python {sys.version_info.major}.{sys.version_info.minor}'
+
+        super().__init__(*args, **kwargs)
 
     # pylint: disable=invalid-name
     def do_GET(self) -> None:
