@@ -13,6 +13,8 @@ import requests
 from requests.exceptions import RequestException
 import yaml
 
+from .output_format import RateLimitOutputFormat
+
 
 TOKEN_RECEIVE_ENDPOINT = 'https://auth.docker.io/token?service=registry.docker.io&scope=repository:ratelimitpreview/test:pull'
 RATE_LIMIT_ENDPOINT = 'https://registry-1.docker.io/v2/ratelimitpreview/test/manifests/latest'
@@ -44,6 +46,21 @@ class DockerRateLimit():
             'rate_limit_used'
         ]
         return {a: getattr(self, a) for a in attrs}
+
+    def to_output_format(self, output_format: RateLimitOutputFormat) -> str:
+        """
+        Return attributes of this object in the requested format
+
+        :param output_format: Format of output
+        :return: Attributes of this object formatted in requested format
+        """
+
+        if output_format == RateLimitOutputFormat.JSON:
+            return self.to_json()
+        if output_format == RateLimitOutputFormat.YAML:
+            return self.to_yaml()
+
+        return None  # type: ignore
 
     def to_json(self, indent: int=4) -> str:
         """

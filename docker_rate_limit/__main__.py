@@ -1,36 +1,25 @@
 #!/usr/bin/env python3
 
-from enum import Enum
-
 from typing_extensions import Annotated
 
 import typer
 
 from .docker_hub import get_rate_limit
 from .http_server import DockerRateLimitHTTPServer
+from .output_format import RateLimitOutputFormat
 
 
 app = typer.Typer(
     no_args_is_help=True,
     context_settings={"help_option_names": ["-h", "--help"]})
 
-class OutputFormat(str, Enum):
-    """Format for outputting Docker Hub rate limit"""
-
-    JSON = 'json'
-    YAML = 'yaml'
-
-    def __str__(self) -> str:
-        return self.value
-
-
 @app.command(help='''
 Query Docker Hub for rate limit''')
 def query(
-        output_format: Annotated[OutputFormat, typer.Option(
+        output_format: Annotated[RateLimitOutputFormat, typer.Option(
             '--format', '-f',
             help='''
-            Output format of rate limit information''')]=OutputFormat.JSON
+            Output format of rate limit information''')]=RateLimitOutputFormat.JSON
     ) -> None:
     """
     Query Docker Hub for rate limit
@@ -42,10 +31,7 @@ def query(
     rate_limit = get_rate_limit()
 
     # Output in correct format
-    if output_format is OutputFormat.JSON:
-        output = rate_limit.to_json()
-    elif output_format is OutputFormat.YAML:
-        output = rate_limit.to_yaml()
+    output = rate_limit.to_output_format(output_format)
     print(output)
 
 @app.command(help='''
