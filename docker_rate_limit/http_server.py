@@ -25,6 +25,9 @@ class DockerRateLimitRequestHandler(BaseHTTPRequestHandler):
     """
     Request handler for basic HTTP server.
     Answers with the current Docker Hub rate limit to GET requests.
+
+    :param *args: Arguments for parent class
+    :param **kwargs: Arguments for parent class
     """
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
