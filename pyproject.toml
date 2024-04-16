@@ -36,6 +36,9 @@ warn_unreachable = true
 # Style of docstring being used
 style = 'sphinx'
 
+# Dont print the file names being checked to the terminal
+quiet = true
+
 # Whether to show filename in every violation or group by file
 show-filenames-in-every-violation-message = false
 
