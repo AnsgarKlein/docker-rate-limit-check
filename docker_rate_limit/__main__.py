@@ -46,17 +46,26 @@ def http(
             '--host',
             metavar='HOST',
             help='''
-            Host to bind on''')]='0.0.0.0'
+            Host to bind on''')]='0.0.0.0',
+        output_format: Annotated[RateLimitOutputFormat, typer.Option(
+            '--format', '-f',
+            help='''
+            Default output format if format is
+            not specified in GET request.''')]=RateLimitOutputFormat.JSON
     ) -> None:
     """
     Run http server to abstract calls to Docker Hub
 
     :param port: Port to listen on
     :param host: Host to bind on
+    :param output_format: Default output format if not specified in request
     """
 
     # Start server
-    server = DockerRateLimitHTTPServer(host=host, port=port)
+    server = DockerRateLimitHTTPServer(
+            host=host,
+            port=port,
+            default_format=output_format)
     server.serve_forever()
 
 def main() -> None:

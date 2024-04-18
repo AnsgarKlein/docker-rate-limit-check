@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from functools import partial
 from http.server import HTTPServer
 from http.server import BaseHTTPRequestHandler
 import sys
@@ -7,6 +8,7 @@ from urllib.parse import parse_qs
 from urllib.parse import urlparse
 
 from typing import Any
+from typing import Optional
 
 from .docker_hub import get_rate_limit
 from .output_format import RateLimitOutputFormat
@@ -17,23 +19,44 @@ class DockerRateLimitHTTPServer(HTTPServer):
     rate limit.
 
     :param port: Port to listen on
+    :param default_format: Default output format if not specified using
+        query parameter ?format=XYZ in GET request.
     :param host: Host string to bind on (default=0.0.0.0)
     """
 
-    def __init__(self, port: int, host: str='0.0.0.0') -> None:
+    def __init__(
+            self,
+            port: int,
+            default_format: RateLimitOutputFormat,
+            host: str='0.0.0.0') -> None:
+
+        # Prepare request handler
+        request_handler = partial(DockerRateLimitRequestHandler, default_format)
+
+        # Call parent init
         conn = (host, port)
-        super().__init__(conn, DockerRateLimitRequestHandler)
+        super().__init__(conn, request_handler)
 
 class DockerRateLimitRequestHandler(BaseHTTPRequestHandler):
     """
     Request handler for basic HTTP server.
     Answers with the current Docker Hub rate limit to GET requests.
 
+    :param default_format: Default output format if not specified using
+        query parameter ?format=XYZ in GET request.
     :param *args: Arguments for parent class
     :param **kwargs: Arguments for parent class
     """
 
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
+    def __init__(
+            self,
+            default_format: RateLimitOutputFormat,
+            *args: Any,
+            **kwargs: Any) -> None:
+
+        # Set default output format if not specified in request
+        self.default_format = default_format
+
         # Set content of "Server" response header
         self.server_version = __name__
         self.sys_version = f'Python {sys.version_info.major}.{sys.version_info.minor}'
@@ -57,12 +80,18 @@ class DockerRateLimitRequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(bytes(message, 'utf-8'))
 
-    def send_rate_limit_response(self, output_format: RateLimitOutputFormat) -> None:
+    def send_rate_limit_response(
+            self,
+            output_format: Optional[RateLimitOutputFormat]=None) -> None:
         """
         Send HTTP response with docker rate limit in specified format.
 
         :param output_format: Format in which to respond
         """
+
+        # If not specified use default format
+        if output_format is None:
+            output_format = self.default_format
 
         # Get rate limit
         rate_limit = get_rate_limit()
@@ -112,8 +141,7 @@ class DockerRateLimitRequestHandler(BaseHTTPRequestHandler):
                 return
 
         # Extract format from request
-        # Default format is JSON
-        format_enum = RateLimitOutputFormat.JSON
+        format_enum = None
         if 'format' in arguments:
             if len(arguments['format']) > 1:
                 message = 'Error: Expected exactly one value for parameter "format"'
