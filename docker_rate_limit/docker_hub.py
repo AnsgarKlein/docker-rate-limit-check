@@ -81,7 +81,9 @@ class DockerRateLimit():
         """
 
         dict_representation = self.asdict()
-        return yaml.safe_dump(dict_representation, explicit_start=True)
+        yaml_repr = yaml.safe_dump(dict_representation, explicit_start=True)
+        yaml_repr = yaml_repr.strip()
+        return yaml_repr
 
 def request_token(user: Optional[str]=None, password: Optional[str]=None) -> str:
     """
