@@ -10,7 +10,7 @@ from urllib.parse import urlparse
 from typing import Any
 from typing import Optional
 
-from .docker_hub import DockerHubRequestor
+from .docker_hub_requestor import DockerHubRequestor
 from .output_format import RateLimitOutputFormat
 
 class DockerRateLimitHTTPServer(HTTPServer):

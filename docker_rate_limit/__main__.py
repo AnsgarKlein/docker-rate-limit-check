@@ -4,7 +4,7 @@ from typing_extensions import Annotated
 
 import typer
 
-from .docker_hub import DockerHubRequestor
+from .docker_hub_requestor import DockerHubRequestor
 from .http_server import DockerRateLimitHTTPServer
 from .output_format import RateLimitOutputFormat
 
