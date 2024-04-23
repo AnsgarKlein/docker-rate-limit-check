@@ -4,7 +4,7 @@ from typing_extensions import Annotated
 
 import typer
 
-from .docker_hub import get_rate_limit
+from .docker_hub import DockerHubRequestor
 from .http_server import DockerRateLimitHTTPServer
 from .output_format import RateLimitOutputFormat
 
@@ -28,7 +28,7 @@ def query(
     """
 
     # Get rate limit
-    rate_limit = get_rate_limit()
+    rate_limit = DockerHubRequestor().get_rate_limit()
 
     # Output in correct format
     output = rate_limit.to_output_format(output_format)
@@ -65,7 +65,8 @@ def http(
     server = DockerRateLimitHTTPServer(
             host=host,
             port=port,
-            default_format=output_format)
+            default_format=output_format,
+            docker_hub_requestor=DockerHubRequestor())
     server.serve_forever()
 
 def main() -> None:

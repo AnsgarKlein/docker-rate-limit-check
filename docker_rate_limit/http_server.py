@@ -10,7 +10,7 @@ from urllib.parse import urlparse
 from typing import Any
 from typing import Optional
 
-from .docker_hub import get_rate_limit
+from .docker_hub import DockerHubRequestor
 from .output_format import RateLimitOutputFormat
 
 class DockerRateLimitHTTPServer(HTTPServer):
@@ -21,6 +21,7 @@ class DockerRateLimitHTTPServer(HTTPServer):
     :param port: Port to listen on
     :param default_format: Default output format if not specified using
         query parameter ?format=XYZ in GET request.
+    :param docker_hub_requestor: Requestor for querying Docker Hub.
     :param host: Host string to bind on (default=0.0.0.0)
     """
 
@@ -28,10 +29,14 @@ class DockerRateLimitHTTPServer(HTTPServer):
             self,
             port: int,
             default_format: RateLimitOutputFormat,
+            docker_hub_requestor: DockerHubRequestor,
             host: str='0.0.0.0') -> None:
 
         # Prepare request handler
-        request_handler = partial(DockerRateLimitRequestHandler, default_format)
+        request_handler = partial(
+                DockerRateLimitRequestHandler,
+                default_format,
+                docker_hub_requestor)
 
         # Call parent init
         conn = (host, port)
@@ -44,6 +49,7 @@ class DockerRateLimitRequestHandler(BaseHTTPRequestHandler):
 
     :param default_format: Default output format if not specified using
         query parameter ?format=XYZ in GET request.
+    :param docker_hub_requestor: Requestor for querying Docker Hub.
     :param *args: Arguments for parent class
     :param **kwargs: Arguments for parent class
     """
@@ -51,11 +57,14 @@ class DockerRateLimitRequestHandler(BaseHTTPRequestHandler):
     def __init__(
             self,
             default_format: RateLimitOutputFormat,
+            docker_hub_requestor: DockerHubRequestor,
             *args: Any,
             **kwargs: Any) -> None:
 
         # Set default output format if not specified in request
         self.default_format = default_format
+
+        self.docker_hub_requestor = docker_hub_requestor
 
         # Set content of "Server" response header
         self.server_version = __name__
@@ -94,7 +103,7 @@ class DockerRateLimitRequestHandler(BaseHTTPRequestHandler):
             output_format = self.default_format
 
         # Get rate limit
-        rate_limit = get_rate_limit()
+        rate_limit = self.docker_hub_requestor.get_rate_limit()
         payload = rate_limit.to_output_format(output_format)
 
         # End payload with newline character
