@@ -1,4 +1,6 @@
 
+LINT_SCRIPT          ?=  scripts/lint.sh
+
 BUILD_DIR            ?=  build
 ARCHIVING_DIR        :=  $(BUILD_DIR)/tmp
 ZIP_FILE             ?=  $(BUILD_DIR)/docker-rate-limit.pyz
@@ -12,11 +14,13 @@ PYTHON_MODULE_DIRS   :=  $(shell find $(PYTHON_MODULE) -type d)
 BUILD_PYTHON_MODULE_FILES  := $(subst $(PYTHON_MODULE),$(ARCHIVING_DIR)/$(PYTHON_MODULE),$(PYTHON_MODULE_FILES))
 BUILD_PYTHON_MODULE_DIRS   := $(subst $(PYTHON_MODULE),$(ARCHIVING_DIR)/$(PYTHON_MODULE),$(PYTHON_MODULE_DIRS))
 
-.PHONY: all clean zipfile
+.PHONY: all clean lint zipfile
 
 all:
 	@echo "Available Targets:"
 	@echo ""
+	@echo "  - lint"
+	@echo "      Lint project"
 	@echo "  - zipfile"
 	@echo "      Pack all python files of this project into a single .pyz"
 	@echo "      Python archive file that can be executed using a python"
@@ -39,6 +43,9 @@ clean:
 	@rm -f "$(ZIP_FILE)"
 	@# TODO: 
 	@echo " TODO: Delete build directory"
+
+lint:
+	@$(LINT_SCRIPT)
 
 zipfile: $(ZIP_FILE)
 
