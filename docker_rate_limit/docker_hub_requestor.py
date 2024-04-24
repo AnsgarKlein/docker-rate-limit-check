@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import datetime
 import re
 import sys
 
@@ -23,14 +24,44 @@ class DockerHubRequestor():
         None for anonymous token.
     :param password: Password for user to request token for.
         None for anonymous token.
+    :param cache_ttl: Number of seconds information should be cached
+        before querying Docker Hub for fresh information.
     """
 
     def __init__(self,
             user: Optional[str]=None,
-            password: Optional[str]=None):
+            password: Optional[str]=None,
+            cache_ttl: int=0):
 
         self.user = user
         self.password = password
+        self.rate_limit = DockerRateLimit(
+            rate_limit_max=0,
+            rate_limit_remaining=0)
+        self.cache_ttl = cache_ttl
+        self.cache_last_refresh = datetime.datetime.fromisoformat('1970-01-01T00:00:00')
+
+    def get_rate_limit(self) -> DockerRateLimit:
+        """
+        Returns information about Docker Hub rate limiting.
+        If cached information is fresh return information from cache.
+        If cache is stale request current rate limit from Docker Hub,
+        store information in cache and return it.
+
+        :return: Information about rate limit
+        """
+
+        # Check age of cache
+        now = datetime.datetime.now()
+        cache_age = (now - self.cache_last_refresh) / datetime.timedelta(seconds=1)
+
+        # If cache is stale then refresh information
+        if cache_age > self.cache_ttl:
+            self.rate_limit = self.get_rate_limit_from_docker_hub()
+            self.cache_last_refresh = datetime.datetime.now()
+
+        # Return information from cache
+        return self.rate_limit
 
     def request_token(self) -> str:
         """
@@ -69,9 +100,10 @@ class DockerHubRequestor():
 
         return str(response_json['token'])
 
-    def get_rate_limit(self) -> DockerRateLimit:
+    def get_rate_limit_from_docker_hub(self) -> DockerRateLimit:
         """
-        Returns information about Docker Hub rate limiting
+        Returns information about Docker Hub rate limiting by actively
+        querying Docker Hub for that information.
 
         :raises KeyError: If JSON returned by Docker Hub is missing malformed and
             does not contain expected keys.

@@ -51,7 +51,14 @@ def http(
             '--format', '-f',
             help='''
             Default output format if format is
-            not specified in GET request.''')]=RateLimitOutputFormat.JSON
+            not specified in GET request.''')]=RateLimitOutputFormat.JSON,
+        cache_ttl: Annotated[int, typer.Option(
+            '--cache-ttl', '-t',
+            metavar='TTL',
+            help='''
+            Cache TTL in seconds. Response by Docker Hub will be cached for
+            this many seconds. Subsequent requests will only be served the
+            cached result until cache age exceeds given TTL.''')]=30
     ) -> None:
     """
     Run http server to abstract calls to Docker Hub
@@ -59,14 +66,18 @@ def http(
     :param port: Port to listen on
     :param host: Host to bind on
     :param output_format: Default output format if not specified in request
+    :param cache_ttl: For how many seconds to cache response by Docker Hub
     """
+
+    docker_hub_requestor = DockerHubRequestor(
+        cache_ttl=cache_ttl)
 
     # Start server
     server = DockerRateLimitHTTPServer(
             host=host,
             port=port,
             default_format=output_format,
-            docker_hub_requestor=DockerHubRequestor())
+            docker_hub_requestor=docker_hub_requestor)
     server.serve_forever()
 
 def main() -> None:
