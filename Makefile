@@ -9,10 +9,10 @@ ADD_PYTHON_SHEBANG   ?=  true
 
 PYTHON_MODULE        ?=  docker_rate_limit
 PYTHON_MODULE_FILES  :=  $(shell find $(PYTHON_MODULE) -type f -iname '*.py')
-PYTHON_MODULE_DIRS   :=  $(shell find $(PYTHON_MODULE) -type d)
+PYTHON_MODULE_DIRS   :=  $(shell find $(PYTHON_MODULE) -type d -not -name '__pycache__')
 
-BUILD_PYTHON_MODULE_FILES  := $(subst $(PYTHON_MODULE),$(ARCHIVING_DIR)/$(PYTHON_MODULE),$(PYTHON_MODULE_FILES))
-BUILD_PYTHON_MODULE_DIRS   := $(subst $(PYTHON_MODULE),$(ARCHIVING_DIR)/$(PYTHON_MODULE),$(PYTHON_MODULE_DIRS))
+BUILD_PYTHON_MODULE_FILES  := $(foreach file, $(PYTHON_MODULE_FILES),$(shell echo "$(ARCHIVING_DIR)/$(file)"))
+BUILD_PYTHON_MODULE_DIRS   := $(foreach dir, $(PYTHON_MODULE_DIRS),$(shell echo "$(ARCHIVING_DIR)/$(dir)"))
 
 .PHONY: all clean lint zipfile
 
