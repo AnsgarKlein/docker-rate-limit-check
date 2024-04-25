@@ -1,4 +1,6 @@
 
+.POSIX:
+
 LINT_SCRIPT          ?=  scripts/lint.sh
 
 BUILD_DIR            ?=  build
@@ -16,8 +18,8 @@ BUILD_PYTHON_MODULE_DIRS   := $(foreach dir, $(PYTHON_MODULE_DIRS),$(shell echo 
 
 ZIPFILE_LAUNCHER     := $(BUILD_DIR)/$(PYTHON_MODULE)-zipfile_launcher.py
 
-.PHONY: all clean lint zipfile
 
+.PHONY: all
 all:
 	@echo "Available Targets:"
 	@echo ""
@@ -40,15 +42,40 @@ all:
 	@echo "          Will be automatically detected by default."
 	@echo "          Currently: $(PYTHON_SHEBANG)"
 
+.PHONY: clean
 clean:
 	@echo " [RM]      $(ZIP_FILE)"
 	@rm -f "$(ZIP_FILE)"
 	@# TODO: 
 	@echo " TODO: Delete build directory"
 
+.PHONY: lint
 lint:
 	@$(LINT_SCRIPT)
 
+
+##
+## Module in build directory
+##
+
+$(BUILD_PYTHON_MODULE)/%.py: $(PYTHON_MODULE_FILES) | $(BUILD_PYTHON_MODULE_DIRS)
+	@echo " [CP]      $(subst $(BUILD_PYTHON_MODULE)/,$(PYTHON_MODULE)/,$@) -> $@"
+	@cp "$(subst $(BUILD_PYTHON_MODULE)/,$(PYTHON_MODULE)/,$@)" "$@"
+
+$(BUILD_PYTHON_MODULE_DIRS):
+	@echo " [MK]      $@"
+	@mkdir -p "$@"
+
+$(BUILD_DIR):
+	@echo " [MK]      $@"
+	@mkdir -p "$@"
+
+
+##
+## ZIP file
+##
+
+.PHONY: zipfile
 zipfile: $(ZIP_FILE)
 
 $(ZIP_FILE): $(ZIPFILE_LAUNCHER) $(BUILD_PYTHON_MODULE_FILES) | $(BUILD_PYTHON_MODULE_DIRS)
@@ -70,16 +97,3 @@ endif
 $(ZIPFILE_LAUNCHER): | $(BUILD_DIR)
 	@echo " [GEN]     $@"
 	@echo 'from $(PYTHON_MODULE).__main__ import main\n\nmain()' > $@
-
-$(BUILD_PYTHON_MODULE)/%.py: $(PYTHON_MODULE_FILES) | $(BUILD_PYTHON_MODULE_DIRS)
-	@echo " [CP]      $(subst $(BUILD_PYTHON_MODULE)/,$(PYTHON_MODULE)/,$@) -> $@"
-	@cp "$(subst $(BUILD_PYTHON_MODULE)/,$(PYTHON_MODULE)/,$@)" "$@"
-
-$(BUILD_PYTHON_MODULE_DIRS):
-	@echo " [MK]      $@"
-	@mkdir -p "$@"
-
-$(BUILD_DIR):
-	@echo " [MK]      $@"
-	@mkdir -p "$@"
-
