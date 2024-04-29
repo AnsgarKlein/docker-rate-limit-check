@@ -136,9 +136,7 @@ class DockerRateLimitRequestHandler(BaseHTTPRequestHandler):
 
         # Return HTTP-404 for every location but /
         if path != '/':
-            self.protocol_version = 'HTTP/1.1'
-            self.send_response(404)
-            self.end_headers()
+            self.send_http_error_message(404, 'HTTP 404 - Not Found')
             return
 
         # Check for unexpected arguments
