@@ -2,6 +2,7 @@
 
 from typing_extensions import Annotated
 
+import rich
 import typer
 
 from .docker_hub_requestor import DockerHubRequestor
@@ -32,7 +33,7 @@ def query(
 
     # Output in correct format
     output = rate_limit.to_output_format(output_format)
-    print(output)
+    rich.print(output)
 
 @app.command(help='''
 Run HTTP server that responds with rate limit''')
