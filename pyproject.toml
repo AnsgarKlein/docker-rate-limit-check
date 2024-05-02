@@ -1,5 +1,27 @@
+[project]
+name = "docker_rate_limit"
+version = "0.1"
+
+requires-python = ">= 3.9"
+dependencies = [
+  "requests==2.31.*",
+  "rich==13.7.*",
+  "typer==0.9.*",
+  "PyYAML==6.0.*"
+]
+
+[project.optional-dependencies]
+dev = [
+  "mypy==1.6.*",
+  "pydoclint==0.3.*",
+  "pylint==3.0.*",
+  "pytype==2024.2.13",
+  "types-requests==2.31.*",
+  "types-PyYAML==6.0.*"
+]
+
 [tool.mypy]
-python_version = '3.7'
+python_version = '3.9'
 
 # Enable incremental mode using cache directory
 incremental = true
@@ -28,6 +50,14 @@ warn_return_any = true
 
 # Warn about unreachable code
 warn_unreachable = true
+
+
+
+
+[tool.pip-tools]
+strip-extras = true
+no-header = true
+annotation-style = "line"
 
 
 
