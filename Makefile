@@ -8,7 +8,7 @@ ZIP_FILE             ?=  $(BUILD_DIR)/docker-rate-limit.pyz
 PYTHON_SHEBANG       ?=  $(shell scripts/detect_python_interpreter.sh)
 ADD_PYTHON_SHEBANG   ?=  true
 
-PYTHON_MODULE        ?=  docker_rate_limit
+PYTHON_MODULE        ?=  docker_rate_limit_check
 PYTHON_MODULE_FILES  :=  $(shell find $(PYTHON_MODULE) -type f -iname '*.py')
 PYTHON_MODULE_DIRS   :=  $(shell find $(PYTHON_MODULE) -type d -not -name '__pycache__')
 
