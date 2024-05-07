@@ -18,6 +18,10 @@ BUILD_PYTHON_MODULE_DIRS   := $(foreach dir, $(PYTHON_MODULE_DIRS),$(shell echo 
 
 ZIPFILE_LAUNCHER     := $(BUILD_DIR)/$(PYTHON_MODULE)-zipfile_launcher.py
 
+PYPROJECT_FILE       := pyproject.toml
+REQUIREMENTS_FILE    := requirements.txt
+REQUIREMENTS_DEV_FILE := requirements-dev.txt
+
 
 .PHONY: all
 all:
@@ -25,6 +29,9 @@ all:
 	@echo ""
 	@echo "  - lint"
 	@echo "      Lint project"
+	@echo "  - update-requirements"
+	@echo "      Use pip-tools to update the package versions specified in the"
+	@echo "      requirement files to the latest supported version."
 	@echo "  - zipfile"
 	@echo "      Pack all python files of this project into a single .pyz"
 	@echo "      Python archive file that can be executed using a python"
@@ -97,3 +104,33 @@ endif
 $(ZIPFILE_LAUNCHER): | $(BUILD_DIR)
 	@echo " [GEN]     $@"
 	@echo 'from $(PYTHON_MODULE).__main__ import main\n\nmain()' > $@
+
+
+##
+## Requirements files
+##
+
+.PHONY: update-requirements
+update-requirements: $(REQUIREMENTS_FILE) $(REQUIREMENTS_DEV_FILE)
+
+.PHONY: $(REQUIREMENTS_FILE)
+$(REQUIREMENTS_FILE): $(PYPROJECT_FILE)
+ifeq ("$(VIRTUAL_ENV)","")
+	@echo "Error: No virtualenv activated" > /dev/stderr
+	@echo "Activate virtualenv first" > /dev/stderr
+	@exit 1
+else
+	@echo " [GEN]     $^ -> $@"
+	@pip-compile --quiet -o "$@"
+endif
+
+.PHONY: $(REQUIREMENTS_DEV_FILE)
+$(REQUIREMENTS_DEV_FILE): $(PYPROJECT_FILE)
+ifeq ("$(VIRTUAL_ENV)","")
+	@echo "Error: No virtualenv activated" > /dev/stderr
+	@echo "Activate virtualenv first" > /dev/stderr
+	@exit 1
+else
+	@echo " [GEN]     $^ -> $@"
+	@pip-compile --quiet --extra dev -o "$@"
+endif
