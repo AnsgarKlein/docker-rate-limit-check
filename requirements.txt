@@ -8,6 +8,7 @@ pygments==2.18.0          # via rich
 pyyaml==6.0.1             # via docker_rate_limit_check (pyproject.toml)
 requests==2.31.0          # via docker_rate_limit_check (pyproject.toml)
 rich==13.7.1              # via docker_rate_limit_check (pyproject.toml)
+shellingham==1.5.4        # via docker_rate_limit_check (pyproject.toml)
 typer==0.9.4              # via docker_rate_limit_check (pyproject.toml)
-typing-extensions==4.11.0  # via typer
+typing-extensions==4.11.0  # via rich, typer
 urllib3==2.2.1            # via requests
