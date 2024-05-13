@@ -2,6 +2,7 @@
 
 from enum import Enum
 
+
 class RateLimitOutputFormat(str, Enum):
     """Format for outputting Docker Hub rate limit"""
 

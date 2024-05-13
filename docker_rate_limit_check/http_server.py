@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-from functools import partial
-from http.server import HTTPServer
-from http.server import BaseHTTPRequestHandler
 import sys
+from functools import partial
+from http.server import BaseHTTPRequestHandler
+from http.server import HTTPServer
 from urllib.parse import parse_qs
 from urllib.parse import urlparse
 
@@ -12,6 +12,7 @@ from typing import Optional
 
 from .docker_hub_requestor import DockerHubRequestor
 from .output_format import RateLimitOutputFormat
+
 
 class DockerRateLimitHTTPServer(HTTPServer):
     """

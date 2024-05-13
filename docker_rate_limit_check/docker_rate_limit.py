@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-from dataclasses import dataclass
 import json
+from dataclasses import dataclass
 
 from typing import Dict
 from typing import Optional
