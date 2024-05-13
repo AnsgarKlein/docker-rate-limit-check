@@ -26,6 +26,19 @@ echo ''
 echo ''
 
 
+if ! command -v isort > /dev/null 2>&1; then
+    echo 'Error: Can not run isort!' > /dev/stderr
+    echo 'isort is not installed!' > /dev/stderr
+else
+    echo 'Running isort...'
+    if ! isort --check-only $PYTHON_PACKAGE; then
+        errors='yes'
+    fi
+fi
+echo ''
+echo ''
+
+
 if ! command -v pylint > /dev/null 2>&1; then
     echo 'Error: Can not run pylint!' > /dev/stderr
     echo 'pylint is not installed!' > /dev/stderr

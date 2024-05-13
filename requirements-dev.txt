@@ -7,7 +7,7 @@ dill==0.3.8               # via pylint
 docstring-parser-fork==0.0.5  # via pydoclint
 idna==3.7                 # via requests
 importlab==0.8.1          # via pytype
-isort==5.13.2             # via pylint
+isort==5.13.2             # via docker_rate_limit_check (pyproject.toml), pylint
 jinja2==3.1.4             # via pytype
 libcst==1.1.0             # via pytype
 markdown-it-py==3.0.0     # via rich
