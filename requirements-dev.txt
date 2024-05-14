@@ -37,6 +37,6 @@ tomlkit==0.12.5           # via pylint
 typer==0.9.4              # via docker_rate_limit_check (pyproject.toml)
 types-pyyaml==6.0.12.20240311  # via docker_rate_limit_check (pyproject.toml)
 types-requests==2.31.0.20240406  # via docker_rate_limit_check (pyproject.toml)
-typing-extensions==4.11.0  # via astroid, libcst, mypy, pylint, pytype, rich, typer, typing-inspect
+typing-extensions==4.11.0  # via astroid, docker_rate_limit_check (pyproject.toml), libcst, mypy, pylint, pytype, rich, typer, typing-inspect
 typing-inspect==0.9.0     # via libcst
 urllib3==2.2.1            # via requests, types-requests

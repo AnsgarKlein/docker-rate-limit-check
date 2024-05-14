@@ -9,6 +9,7 @@ dependencies = [
   'rich==13.*',
   'shellingham',
   'typer==0.9.*',
+  'typing_extensions>=4.3.0',
   'PyYAML==6.*',
 ]
 
