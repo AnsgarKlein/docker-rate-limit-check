@@ -18,6 +18,7 @@ mypy==1.10.0              # via docker_rate_limit_check (pyproject.toml)
 mypy-extensions==1.0.0    # via mypy, typing-inspect
 networkx==3.1             # via importlab, pytype
 ninja==1.11.1.1           # via pytype
+nodeenv==1.8.0            # via pyright
 platformdirs==4.2.1       # via pylint
 pycnite==2023.10.11       # via pytype
 pydoclint==0.3.10         # via docker_rate_limit_check (pyproject.toml)
@@ -25,6 +26,7 @@ pydot==2.0.0              # via pytype
 pygments==2.18.0          # via rich
 pylint==3.1.0             # via docker_rate_limit_check (pyproject.toml)
 pyparsing==3.1.2          # via pydot
+pyright==1.1.362          # via docker_rate_limit_check (pyproject.toml)
 pytype==2024.2.13         # via docker_rate_limit_check (pyproject.toml)
 pyyaml==6.0.1             # via docker_rate_limit_check (pyproject.toml), libcst
 requests==2.31.0          # via docker_rate_limit_check (pyproject.toml)
@@ -40,3 +42,6 @@ types-requests==2.31.0.20240406  # via docker_rate_limit_check (pyproject.toml)
 typing-extensions==4.11.0  # via astroid, docker_rate_limit_check (pyproject.toml), libcst, mypy, pylint, pytype, rich, typer, typing-inspect
 typing-inspect==0.9.0     # via libcst
 urllib3==2.2.1            # via requests, types-requests
+
+# The following packages are considered to be unsafe in a requirements file:
+setuptools==69.5.1        # via nodeenv

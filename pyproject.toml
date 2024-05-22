@@ -20,6 +20,7 @@ dev = [
   'pydoclint==0.3.*',
   'pylint==3.*',
   'pytype==2024.2.13',
+  'pyright==1.1.*',
   'types-requests==2.*',
   'types-PyYAML==6.0.*',
 ]
@@ -685,6 +686,12 @@ init-import = false
 # List of qualified module names which can have objects that can redefine
 # builtins.
 redefining-builtins-modules = ["six.moves", "past.builtins", "future.builtins", "builtins", "io"]
+
+
+
+
+[tool.pyright]
+pythonVersion = '3.8'
 
 
 

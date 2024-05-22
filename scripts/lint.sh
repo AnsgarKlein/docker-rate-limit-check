@@ -39,6 +39,19 @@ echo ''
 echo ''
 
 
+if ! command -v pyright > /dev/null 2>&1; then
+    echo 'Error: Can not run pyright!' > /dev/stderr
+    echo 'pyright is not installed!' > /dev/stderr
+else
+    echo 'Running pyright...'
+    if ! pyright $PYTHON_PACKAGE; then
+        errors='yes'
+    fi
+fi
+echo ''
+echo ''
+
+
 if ! command -v pylint > /dev/null 2>&1; then
     echo 'Error: Can not run pylint!' > /dev/stderr
     echo 'pylint is not installed!' > /dev/stderr
