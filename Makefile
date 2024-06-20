@@ -121,7 +121,7 @@ ifeq ("$(VIRTUAL_ENV)","")
 	@exit 1
 else
 	@echo " [GEN]     $^ -> $@"
-	@pip-compile --quiet --allow-unsafe -o "$@"
+	@pip-compile --upgrade --quiet --allow-unsafe -o "$@"
 endif
 
 .PHONY: $(REQUIREMENTS_DEV_FILE)
@@ -132,5 +132,5 @@ ifeq ("$(VIRTUAL_ENV)","")
 	@exit 1
 else
 	@echo " [GEN]     $^ -> $@"
-	@pip-compile --quiet --allow-unsafe --extra dev -o "$@"
+	@pip-compile --upgrade --quiet --allow-unsafe --extra dev -o "$@"
 endif
