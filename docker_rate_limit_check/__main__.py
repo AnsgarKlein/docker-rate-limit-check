@@ -42,7 +42,8 @@ def http(
             '--port', '-p',
             metavar='PORT',
             help='''
-            Port to listen on''')],
+            Port to listen on''',
+            show_default=False)],
         host: Annotated[str, typer.Option(
             '--host',
             metavar='HOST',
