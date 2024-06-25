@@ -13,7 +13,7 @@ from .output_format import RateLimitOutputFormat
 
 
 @dataclass
-class DockerRateLimit():
+class DockerRateLimit:
     """Contains information about Docker Hub rate limiting"""
 
     rate_limit_max: int

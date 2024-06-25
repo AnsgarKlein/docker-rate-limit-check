@@ -16,7 +16,7 @@ TOKEN_RECEIVE_ENDPOINT = 'https://auth.docker.io/token?service=registry.docker.i
 RATE_LIMIT_ENDPOINT = 'https://registry-1.docker.io/v2/ratelimitpreview/test/manifests/latest'
 
 
-class DockerHubRequestor():
+class DockerHubRequestor:
     """
     Requestor that queries Docker Hub for the current rate limit.
 
@@ -82,21 +82,21 @@ class DockerHubRequestor():
 
         # Check for correct status code
         if req.status_code != 200:
-            raise RequestException((
+            raise RequestException(
                 'Error when requesting token. '
-                f'Response code was {req.status_code} instead of 200.'))
+                f'Response code was {req.status_code} instead of 200.')
 
         response_json = req.json()
 
         # Check for malformed json
         if 'token' not in response_json:
-            raise KeyError((
+            raise KeyError(
                 'Error when parsing response: '
-                'Could not find "token" key in response.'))
+                'Could not find "token" key in response.')
         if not isinstance(response_json['token'], str):
-            raise KeyError((
+            raise KeyError(
                 'Error when parsing response: '
-                '"token" key is not of type string.'))
+                '"token" key is not of type string.')
 
         return str(response_json['token'])
 
@@ -159,6 +159,6 @@ class DockerHubRequestor():
                 rate_limit_max=0,
                 rate_limit_remaining=0)
 
-        raise RequestException((
+        raise RequestException(
             'Error when requesting rate limit. '
-            f'Response code was {req.status_code} instead of 200 or 429.'))
+            f'Response code was {req.status_code} instead of 200 or 429.')
