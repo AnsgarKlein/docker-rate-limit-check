@@ -12,7 +12,8 @@ from .output_format import RateLimitOutputFormat
 
 app = typer.Typer(
     no_args_is_help=True,
-    context_settings={"help_option_names": ["-h", "--help"]})
+    context_settings={"help_option_names": ["-h", "--help"]},
+    pretty_exceptions_enable=False)
 
 @app.command(help='''
 Query Docker Hub for rate limit''')
