@@ -21,6 +21,7 @@ dev = [
   'pylint==3.*',
   'pytype==2024.2.13',
   'pyright==1.1.*',
+  'ruff==0.4.*',
   'types-requests==2.*',
   'types-PyYAML==6.0.*',
 ]
@@ -90,6 +91,32 @@ warn_unreachable = true
 strip-extras = true
 no-header = true
 annotation-style = "line"
+
+
+
+
+[tool.pycodestyle]
+max-line-length = 100
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+]
+
+[tool.ruff.format]
+quote-style = 'double'
 
 
 

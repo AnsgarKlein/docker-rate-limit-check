@@ -39,6 +39,19 @@ echo ''
 echo ''
 
 
+if ! command -v ruff > /dev/null 2>&1; then
+    echo 'Error: Can not run ruff!' > /dev/stderr
+    echo 'ruff is not installed!' > /dev/stderr
+else
+    echo 'Running ruff...'
+    if ! ruff check $PYTHON_PACKAGE; then
+        errors='yes'
+    fi
+fi
+echo ''
+echo ''
+
+
 if ! command -v pyright > /dev/null 2>&1; then
     echo 'Error: Can not run pyright!' > /dev/stderr
     echo 'pyright is not installed!' > /dev/stderr

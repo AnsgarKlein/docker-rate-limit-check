@@ -15,5 +15,8 @@ __pycache__/
 # pytype
 /.pytype/
 
+# ruff
+/.ruff_cache/
+
 # Build directory
 /build/
