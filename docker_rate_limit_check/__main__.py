@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from typing import Optional
 from typing_extensions import Annotated
 
 import rich
@@ -15,9 +16,27 @@ app = typer.Typer(
     context_settings={"help_option_names": ["-h", "--help"]},
     pretty_exceptions_enable=False)
 
+typer_user_option = typer.Option(
+    '--user', '-u',
+    metavar='USER',
+    help='''
+    User name to use for authentication to Docker Hub''',
+    show_default=False)
+
+typer_pass_option = typer.Option(
+    '--pass',
+    metavar='PASSWORD',
+    help='''
+    User password to use for authentication to Docker Hub''',
+    show_default=False)
+
+
 @app.command(help='''
 Query Docker Hub for rate limit''')
+# pylint: disable=too-many-arguments
 def query(
+        user: Annotated[Optional[str], typer_user_option]=None,
+        password: Annotated[Optional[str], typer_pass_option]=None,
         output_format: Annotated[RateLimitOutputFormat, typer.Option(
             '--format', '-f',
             help='''
@@ -26,11 +45,16 @@ def query(
     """
     Query Docker Hub for rate limit
 
+    :param user: User name to use for authentication to Docker Hub
+    :param password: User password to use for authentication to Docker Hub
     :param output_format: Output format of rate limit information
     """
 
     # Get rate limit
-    rate_limit = DockerHubRequestor().get_rate_limit()
+    docker_hub_requestor = DockerHubRequestor(
+        user=user,
+        password=password)
+    rate_limit = docker_hub_requestor.get_rate_limit()
 
     # Output in correct format
     output = rate_limit.to_output_format(output_format)
@@ -38,6 +62,7 @@ def query(
 
 @app.command(help='''
 Run HTTP server that responds with rate limit''')
+# pylint: disable=too-many-arguments
 def http(
         port: Annotated[int, typer.Option(
             '--port', '-p',
@@ -50,6 +75,8 @@ def http(
             metavar='HOST',
             help='''
             Host to bind on''')]='0.0.0.0',
+        user: Annotated[Optional[str], typer_user_option]=None,
+        password: Annotated[Optional[str], typer_pass_option]=None,
         output_format: Annotated[RateLimitOutputFormat, typer.Option(
             '--format', '-f',
             help='''
@@ -68,11 +95,15 @@ def http(
 
     :param port: Port to listen on
     :param host: Host to bind on
+    :param user: User name to use for authentication to Docker Hub
+    :param password: User password to use for authentication to Docker Hub
     :param output_format: Default output format if not specified in request
     :param cache_ttl: For how many seconds to cache response by Docker Hub
     """
 
     docker_hub_requestor = DockerHubRequestor(
+        user=user,
+        password=password,
         cache_ttl=cache_ttl)
 
     # Start server
