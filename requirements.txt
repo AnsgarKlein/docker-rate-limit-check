@@ -1,4 +1,4 @@
-certifi==2024.6.2         # via requests
+certifi==2024.7.4         # via requests
 charset-normalizer==3.3.2  # via requests
 click==8.1.7              # via typer
 idna==3.7                 # via requests
