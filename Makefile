@@ -12,11 +12,11 @@ PYTHON_MODULE        ?=  docker_rate_limit_check
 PYTHON_MODULE_FILES  :=  $(shell find $(PYTHON_MODULE) -type f -iname '*.py')
 PYTHON_MODULE_DIRS   :=  $(shell find $(PYTHON_MODULE) -type d -not -name '__pycache__')
 
-BUILD_PYTHON_MODULE        := $(BUILD_DIR)/$(PYTHON_MODULE)
-BUILD_PYTHON_MODULE_FILES  := $(foreach file, $(PYTHON_MODULE_FILES),$(shell echo "$(BUILD_DIR)/$(file)"))
-BUILD_PYTHON_MODULE_DIRS   := $(foreach dir, $(PYTHON_MODULE_DIRS),$(shell echo "$(BUILD_DIR)/$(dir)"))
-
-ZIPFILE_LAUNCHER     := $(BUILD_DIR)/$(PYTHON_MODULE)-zipfile_launcher.py
+ZIPFILE_DIR                  := $(BUILD_DIR)/zipappbuild
+ZIPFILE_LAUNCHER             := $(ZIPFILE_DIR)/__main__.py
+ZIPFILE_PYTHON_MODULE        := $(ZIPFILE_DIR)/$(PYTHON_MODULE)
+ZIPFILE_PYTHON_MODULE_FILES  := $(foreach file, $(PYTHON_MODULE_FILES),$(shell echo "$(ZIPFILE_DIR)/$(file)"))
+ZIPFILE_PYTHON_MODULE_DIRS   := $(foreach dir, $(PYTHON_MODULE_DIRS),$(shell echo "$(ZIPFILE_DIR)/$(dir)"))
 
 PYPROJECT_FILE       := pyproject.toml
 REQUIREMENTS_FILE    := requirements.txt
@@ -53,6 +53,8 @@ all:
 clean:
 	@echo " [RM]      $(ZIP_FILE)"
 	@rm -f "$(ZIP_FILE)"
+	@echo " [RM]      $(ZIPFILE_LAUNCHER)"
+	@rm -f "$(ZIPFILE_LAUNCHER)"
 	@# TODO: 
 	@echo " TODO: Delete build directory"
 
@@ -62,16 +64,8 @@ lint:
 
 
 ##
-## Module in build directory
+## Build directory
 ##
-
-$(BUILD_PYTHON_MODULE)/%.py: $(PYTHON_MODULE_FILES) | $(BUILD_PYTHON_MODULE_DIRS)
-	@echo " [CP]      $(subst $(BUILD_PYTHON_MODULE)/,$(PYTHON_MODULE)/,$@) -> $@"
-	@cp "$(subst $(BUILD_PYTHON_MODULE)/,$(PYTHON_MODULE)/,$@)" "$@"
-
-$(BUILD_PYTHON_MODULE_DIRS):
-	@echo " [MK]      $@"
-	@mkdir -p "$@"
 
 $(BUILD_DIR):
 	@echo " [MK]      $@"
@@ -85,25 +79,36 @@ $(BUILD_DIR):
 .PHONY: zipfile
 zipfile: $(ZIP_FILE)
 
-$(ZIP_FILE): $(ZIPFILE_LAUNCHER) $(BUILD_PYTHON_MODULE_FILES) | $(BUILD_PYTHON_MODULE_DIRS)
+$(ZIP_FILE): $(ZIPFILE_LAUNCHER) $(ZIPFILE_PYTHON_MODULE_FILES) | $(ZIPFILE_PYTHON_MODULE_DIRS)
 	@echo " [GEN]     $@"
 ifeq ($(ADD_PYTHON_SHEBANG),false)
 	@$(PYTHON_SHEBANG) -m zipapp \
 		--compress \
 		--output "$@" \
-		$(ZIPFILE_LAUNCHER)
+		$(ZIPFILE_DIR)
 else
 	@$(PYTHON_SHEBANG) -m zipapp \
 		--compress \
 		--output "$@" \
 		--python "$(PYTHON_SHEBANG)" \
-		$(ZIPFILE_LAUNCHER)
+		$(ZIPFILE_DIR)
 endif
 
-.INTERMEDIATE: $(ZIPFILE_LAUNCHER)
-$(ZIPFILE_LAUNCHER): | $(BUILD_DIR)
+$(ZIPFILE_LAUNCHER): | $(ZIPFILE_DIR)
 	@echo " [GEN]     $@"
 	@echo 'from $(PYTHON_MODULE).__main__ import main\n\nmain()' > $@
+
+$(ZIPFILE_PYTHON_MODULE)/%.py: $(PYTHON_MODULE_FILES) | $(ZIPFILE_PYTHON_MODULE_DIRS)
+	@echo " [CP]      $(subst $(ZIPFILE_PYTHON_MODULE)/,$(PYTHON_MODULE)/,$@) -> $@"
+	@cp "$(subst $(ZIPFILE_PYTHON_MODULE)/,$(PYTHON_MODULE)/,$@)" "$@"
+
+$(ZIPFILE_PYTHON_MODULE_DIRS): | $(ZIPFILE_DIR)
+	@echo " [MK]      $@"
+	@mkdir -p "$@"
+
+$(ZIPFILE_DIR): | $(BUILD_DIR)
+	@echo " [MK]      $@"
+	@mkdir -p "$@"
 
 
 ##
