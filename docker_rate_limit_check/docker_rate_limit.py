@@ -18,7 +18,7 @@ class DockerRateLimit:
 
     rate_limit_max: int
     rate_limit_remaining: int
-    ip: Optional[str]=None
+    identifier: Optional[str]=None
 
     @property
     def rate_limit_used(self) -> int:  # pylint: disable=missing-function-docstring
@@ -34,7 +34,7 @@ class DockerRateLimit:
         attrs = [
             'rate_limit_max',
             'rate_limit_remaining',
-            'ip',
+            'identifier',
             'rate_limit_used'
         ]
         return {a: getattr(self, a) for a in attrs}

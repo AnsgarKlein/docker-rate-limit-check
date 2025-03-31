@@ -147,12 +147,12 @@ class DockerHubRequestor:
                     r'^(\d*);w=(.*)$', r'\1',
                     response_headers['ratelimit-remaining'])
                 )
-            rate_limit_ip = response_headers['docker-ratelimit-source']
+            rate_limit_identifier = response_headers['docker-ratelimit-source']
 
             return DockerRateLimit(
                 rate_limit_max=rate_limit_max,
                 rate_limit_remaining=rate_limit_remaining,
-                ip=rate_limit_ip)
+                identifier=rate_limit_identifier)
 
         if req.status_code == 429:
             return DockerRateLimit(
