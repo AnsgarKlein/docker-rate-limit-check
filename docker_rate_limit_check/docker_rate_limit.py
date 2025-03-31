@@ -49,6 +49,8 @@ class DockerRateLimit:
 
         if output_format == RateLimitOutputFormat.JSON:
             return self.to_json()
+        if output_format == RateLimitOutputFormat.PROMETHEUS:
+            return self.to_prometheus()
         if output_format == RateLimitOutputFormat.YAML:
             return self.to_yaml()
 
@@ -64,6 +66,25 @@ class DockerRateLimit:
 
         dict_representation = self.asdict()
         return json.dumps(dict_representation, indent=indent)
+
+    def to_prometheus(self) -> str:
+        """
+        Return attributes of this object as string containing prometheus metrics
+
+        :return: String representation of this object as prometheus metrics
+        """
+
+        lines = [
+            '# HELP Maximum image pulls for identifier (best case)',
+            (f'docker_hub_rate_limit_max{{identifier="{self.identifier}"}} '
+            f'{self.rate_limit_max}'),
+
+            '# HELP Currently remaining image pulls for identifier',
+            (f'docker_hub_rate_limit_remaining{{identifier="{self.identifier}"}} '
+            f'{self.rate_limit_remaining}'),
+        ]
+
+        return '\n'.join(lines)
 
     def to_yaml(self) -> str:
         """

@@ -135,8 +135,8 @@ class DockerRateLimitRequestHandler(BaseHTTPRequestHandler):
         path = urltuple.path
         arguments = parse_qs(urltuple.query)
 
-        # Return HTTP-404 for every location but /
-        if path != '/':
+        # Return HTTP-404 for every location but / and /metrics
+        if path not in ['/', '/metrics']:
             self.send_http_error_message(404, 'HTTP 404 - Not Found')
             return
 
@@ -148,8 +148,14 @@ class DockerRateLimitRequestHandler(BaseHTTPRequestHandler):
                 self.send_http_error_message(400, message)
                 return
 
-        # Extract format from request
+        # Decide output format
         format_enum = None
+
+        # In case path is /metrics always default to prometheus output format
+        if path == '/metrics':
+            format_enum = RateLimitOutputFormat.PROMETHEUS
+
+        # Extract format from request
         if 'format' in arguments:
             if len(arguments['format']) > 1:
                 message = 'Error: Expected exactly one value for parameter "format"'

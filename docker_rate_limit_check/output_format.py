@@ -7,6 +7,7 @@ class RateLimitOutputFormat(str, Enum):
     """Format for outputting Docker Hub rate limit"""
 
     JSON = 'json'
+    PROMETHEUS = 'prometheus'
     YAML = 'yaml'
 
     def __str__(self) -> str:
