@@ -82,6 +82,10 @@ class DockerRateLimit:
             '# HELP Currently remaining image pulls for identifier',
             (f'docker_hub_rate_limit_remaining{{identifier="{self.identifier}"}} '
             f'{self.rate_limit_remaining}'),
+
+            '# HELP Currently used up image pulls for identifier',
+            (f'docker_hub_rate_limit_used{{identifier="{self.identifier}"}} '
+            f'{self.rate_limit_used}'),
         ]
 
         return '\n'.join(lines)
