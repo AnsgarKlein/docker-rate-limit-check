@@ -96,7 +96,7 @@ endif
 
 $(ZIPFILE_LAUNCHER): | $(ZIPFILE_DIR)
 	@echo " [GEN]     $@"
-	@echo 'from $(PYTHON_MODULE).__main__ import main\n\nmain()' > $@
+	@echo -e 'from $(PYTHON_MODULE).__main__ import main\n\nmain()' > $@
 
 $(ZIPFILE_PYTHON_MODULE)/%.py: $(PYTHON_MODULE_FILES) | $(ZIPFILE_PYTHON_MODULE_DIRS)
 	@echo " [CP]      $(subst $(ZIPFILE_PYTHON_MODULE)/,$(PYTHON_MODULE)/,$@) -> $@"
