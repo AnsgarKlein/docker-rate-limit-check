@@ -37,3 +37,14 @@ jobs:
         run: |
           source venv/bin/activate
           scripts/lint.sh
+
+  container_build:
+    name: Build container image
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build container image
+        run: |
+          docker buildx build .
