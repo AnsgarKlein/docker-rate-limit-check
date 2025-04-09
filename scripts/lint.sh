@@ -1,10 +1,10 @@
 #!/bin/sh
 
+# Directory of this script
 SCRIPT_DIR="$(cd "$(dirname "$(realpath "$0")")" && pwd -P)"
-PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd -P)"
 
-# Change directory to project root
-cd "$PROJECT_ROOT" || exit 1
+# Root directory of the project
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd -P)"
 
 # Name of python package
 PYTHON_PACKAGE='docker_rate_limit_check'
@@ -13,12 +13,16 @@ PYTHON_PACKAGE='docker_rate_limit_check'
 errors=no
 
 
+# Change directory to project root
+cd "$PROJECT_ROOT" || exit 1
+
+
 if ! command -v mypy > /dev/null 2>&1; then
     echo 'Error: Can not run mypy!' > /dev/stderr
     echo 'mypy is not installed!' > /dev/stderr
 else
     echo 'Running mypy...'
-    if ! mypy $PYTHON_PACKAGE; then
+    if ! mypy "$PYTHON_PACKAGE"; then
         errors='yes'
     fi
 fi
@@ -31,7 +35,7 @@ if ! command -v isort > /dev/null 2>&1; then
     echo 'isort is not installed!' > /dev/stderr
 else
     echo 'Running isort...'
-    if ! isort --check-only $PYTHON_PACKAGE; then
+    if ! isort --check-only "$PYTHON_PACKAGE"; then
         errors='yes'
     fi
 fi
@@ -44,7 +48,7 @@ if ! command -v ruff > /dev/null 2>&1; then
     echo 'ruff is not installed!' > /dev/stderr
 else
     echo 'Running ruff...'
-    if ! ruff check $PYTHON_PACKAGE; then
+    if ! ruff check "$PYTHON_PACKAGE"; then
         errors='yes'
     fi
 fi
@@ -57,7 +61,7 @@ if ! command -v pyright > /dev/null 2>&1; then
     echo 'pyright is not installed!' > /dev/stderr
 else
     echo 'Running pyright...'
-    if ! pyright $PYTHON_PACKAGE; then
+    if ! pyright "$PYTHON_PACKAGE"; then
         errors='yes'
     fi
 fi
@@ -70,7 +74,7 @@ if ! command -v pylint > /dev/null 2>&1; then
     echo 'pylint is not installed!' > /dev/stderr
 else
     echo 'Running pylint...'
-    if ! pylint $PYTHON_PACKAGE; then
+    if ! pylint "$PYTHON_PACKAGE"; then
         errors='yes'
     fi
 fi
@@ -83,7 +87,7 @@ if ! command -v pydoclint > /dev/null 2>&1; then
     echo 'pydoclint is not installed!' > /dev/stderr
 else
     echo 'Running pydoclint...'
-    if ! pydoclint $PYTHON_PACKAGE; then
+    if ! pydoclint "$PYTHON_PACKAGE"; then
         errors='yes'
     fi
 fi
@@ -96,7 +100,7 @@ if ! command -v pytype > /dev/null 2>&1; then
     echo 'pytype is not installed!' > /dev/stderr
 else
     echo 'Running pytype...'
-    if ! pytype --jobs auto $PYTHON_PACKAGE; then
+    if ! pytype --jobs auto "$PYTHON_PACKAGE"; then
         errors='yes'
     fi
 fi
