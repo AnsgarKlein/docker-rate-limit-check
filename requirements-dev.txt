@@ -10,10 +10,8 @@ importlab==0.8.1          # via pytype
 isort==5.13.2             # via docker_rate_limit_check (pyproject.toml), pylint
 jinja2==3.1.6             # via pytype
 libcst==1.1.0             # via pytype
-markdown-it-py==3.0.0     # via rich
 markupsafe==2.1.5         # via jinja2
 mccabe==0.7.0             # via pylint
-mdurl==0.1.2              # via markdown-it-py
 mypy==1.14.1              # via docker_rate_limit_check (pyproject.toml)
 mypy-extensions==1.0.0    # via mypy, typing-inspect
 networkx==3.1             # via importlab, pytype
@@ -23,14 +21,12 @@ platformdirs==4.3.6       # via pylint
 pycnite==2024.7.31        # via pytype
 pydoclint==0.3.10         # via docker_rate_limit_check (pyproject.toml)
 pydot==3.0.4              # via pytype
-pygments==2.19.1          # via rich
 pylint==3.2.7             # via docker_rate_limit_check (pyproject.toml)
 pyparsing==3.1.4          # via pydot
 pyright==1.1.398          # via docker_rate_limit_check (pyproject.toml)
 pytype==2024.2.13         # via docker_rate_limit_check (pyproject.toml)
 pyyaml==6.0.2             # via docker_rate_limit_check (pyproject.toml), libcst
 requests==2.32.3          # via docker_rate_limit_check (pyproject.toml)
-rich==13.9.4              # via docker_rate_limit_check (pyproject.toml)
 ruff==0.4.10              # via docker_rate_limit_check (pyproject.toml)
 shellingham==1.5.4        # via docker_rate_limit_check (pyproject.toml)
 tabulate==0.9.0           # via pytype
@@ -40,6 +36,6 @@ tomlkit==0.13.2           # via pylint
 typer==0.9.4              # via docker_rate_limit_check (pyproject.toml)
 types-pyyaml==6.0.12.20241230  # via docker_rate_limit_check (pyproject.toml)
 types-requests==2.32.0.20241016  # via docker_rate_limit_check (pyproject.toml)
-typing-extensions==4.13.0  # via astroid, docker_rate_limit_check (pyproject.toml), libcst, mypy, pylint, pyright, pytype, rich, typer, typing-inspect
+typing-extensions==4.13.0  # via astroid, docker_rate_limit_check (pyproject.toml), libcst, mypy, pylint, pyright, pytype, typer, typing-inspect
 typing-inspect==0.9.0     # via libcst
 urllib3==2.2.3            # via requests, types-requests

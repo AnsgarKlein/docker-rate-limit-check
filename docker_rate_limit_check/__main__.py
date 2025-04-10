@@ -3,7 +3,6 @@
 from typing import Optional
 from typing_extensions import Annotated
 
-import rich
 import typer
 
 from .docker_hub_requestor import DockerHubRequestor
@@ -58,12 +57,7 @@ def query(
 
     # Output in correct format
     output = rate_limit.to_output_format(output_format)
-
-    # Output with or without syntax highlight (depending on format)
-    if output_format in [RateLimitOutputFormat.JSON, RateLimitOutputFormat.YAML]:
-        rich.print(output)
-    else:
-        print(output)
+    print(output)
 
 @app.command(help='''
 Run HTTP server that responds with rate limit''')

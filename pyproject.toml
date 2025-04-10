@@ -6,7 +6,6 @@ requires-python = '>= 3.8'
 
 dependencies = [
   'requests==2.*',
-  'rich==13.*',
   'shellingham',
   'typer==0.9.*',
   'typing_extensions>=4.3.0',
