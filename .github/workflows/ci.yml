@@ -13,9 +13,6 @@ jobs:
     name: Lint
     runs-on: 'ubuntu-latest'
     steps:
-      - name: Update repositories
-        run: sudo apt-get -yq update
-
       - name: Checkout code
         uses: actions/checkout@v4
 
