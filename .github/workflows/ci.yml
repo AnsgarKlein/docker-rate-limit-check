@@ -37,7 +37,7 @@ jobs:
       - name: Lint
         run: |
           source venv/bin/activate
-          scripts/lint.sh
+          make lint
 
   container_build:
     name: Build container image
