@@ -6,6 +6,9 @@ SCRIPT_DIR="$(cd "$(dirname "$(realpath "$0")")" && pwd -P)"
 # Root directory of the project
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd -P)"
 
+# Directory of the tests
+TEST_DIR="${PROJECT_ROOT}/tests"
+
 # Name of python package
 PYTHON_PACKAGE='docker_rate_limit_check'
 
@@ -25,6 +28,11 @@ else
     if ! mypy "$PYTHON_PACKAGE"; then
         errors='yes'
     fi
+
+    echo 'Running mypy on tests...'
+    if ! mypy "$TEST_DIR"; then
+        errors='yes'
+    fi
 fi
 echo ''
 echo ''
@@ -36,6 +44,12 @@ if ! command -v isort > /dev/null 2>&1; then
 else
     echo 'Running isort...'
     if ! isort --check-only "$PYTHON_PACKAGE"; then
+        errors='yes'
+    fi
+
+
+    echo 'Running isort on tests...'
+    if ! isort --check-only "$TEST_DIR"; then
         errors='yes'
     fi
 fi

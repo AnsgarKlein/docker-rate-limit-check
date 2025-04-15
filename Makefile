@@ -2,6 +2,7 @@
 .POSIX:
 
 LINT_SCRIPT          ?=  scripts/lint.sh
+TEST_SCRIPT          ?=  scripts/test.sh
 
 BUILD_DIR            ?=  build
 ZIP_FILE             ?=  $(BUILD_DIR)/docker-rate-limit.pyz
@@ -29,6 +30,8 @@ all:
 	@echo ""
 	@echo "  - lint"
 	@echo "      Lint project"
+	@echo "  - test"
+	@echo "      Run tests"
 	@echo "  - update-requirements"
 	@echo "      Use pip-tools to update the package versions specified in the"
 	@echo "      requirement files to the latest supported version."
@@ -61,6 +64,10 @@ clean:
 .PHONY: lint
 lint:
 	@$(LINT_SCRIPT)
+
+.PHONY: test
+test:
+	@$(TEST_SCRIPT)
 
 
 ##
