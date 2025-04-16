@@ -16,7 +16,7 @@ WORKDIR /app
 
 # Install pip requirements
 COPY requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-compile --no-cache-dir -r requirements.txt
 
 # Copy app
 COPY docker_rate_limit_check /app/docker_rate_limit_check
