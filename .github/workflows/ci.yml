@@ -39,6 +39,36 @@ jobs:
           source venv/bin/activate
           make lint
 
+  test:
+    name: Run tests
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.8'
+          cache: 'pip'
+          cache-dependency-path: |
+            /requirements.txt
+            /requirements-dev.txt
+
+      - name: Install dev dependencies
+        run: |
+          python3 -m venv venv
+          source venv/bin/activate
+          echo "Virtualenv: $VIRTUAL_ENV"
+          pip install -U pip
+          pip install -U -r requirements.txt
+          pip install -U -r requirements-dev.txt
+
+      - name: Run tests
+        run: |
+          source venv/bin/activate
+          make test
+
   container_build:
     name: Build container image
     runs-on: 'ubuntu-latest'
