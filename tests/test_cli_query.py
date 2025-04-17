@@ -2,21 +2,27 @@
 
 import json
 import re
+import sys
 import unittest
 from io import StringIO
 from unittest.mock import patch
 
 from typing import Any
 from typing import Dict
+from typing import List
+from typing import Tuple
 
 import yaml
 
-from docker_rate_limit_check.__main__ import query
-from docker_rate_limit_check.output_format import RateLimitOutputFormat
+import docker_rate_limit_check.__main__
 
 
-class TestQuery(unittest.TestCase):
+class TestCliQuery(unittest.TestCase):
     def helper_test_query_dict(self, data: Dict[str, Any]) -> None:
+        """
+        Helper function to check the content of the query output.
+        """
+
         expected_keys = [
             ('rate_limit_max', int),
             ('rate_limit_remaining', int),
@@ -42,35 +48,68 @@ class TestQuery(unittest.TestCase):
                 tup[1],
                 f'"{tup[0]}" in JSON output is not of type {tup[1]}')
 
-    def test_query_json(self) -> None:
-        # Patch stdout to capture the output
-        with patch('sys.stdout', StringIO()) as mock_stdout:
-            query(output_format=RateLimitOutputFormat.JSON)
-        stdout = mock_stdout.getvalue()
+    def helper_execute_cli(self, argv: List[str]) -> Tuple[int, str]:
+        """
+        Helper function to execute the CLI and capture the output.
+
+        :param argv: List of command line arguments to pass to the CLI
+        :return: Tuple containing the exit code and the captured output
+        """
+
+        # Create mock exit function to capture the exit code
+        # and prevent the program from exiting
+        exit_code = 0
+        def mock_exit(exit_code: int) -> None:
+             exit_code = exit_code
+
+        # Patch sys.argv to simulate command line arguments
+        # Patch sys.exit to capture the exit code
+        # Patch sys.stdout to capture the output
+        with patch.object(sys, 'argv', argv), \
+             patch.object(sys, 'exit', mock_exit), \
+             patch('sys.stdout', StringIO()) as mock_stdout:
+                docker_rate_limit_check.__main__.main()
+
+        return exit_code, mock_stdout.getvalue()
+
+    def test_cli_query_json(self) -> None:
+        argv = ['docker_rate_limit_check', 'query', '--format', 'json']
+        exit_code, stdout = self.helper_execute_cli(argv)
+
+        # Check the exit code
+        self.assertEqual(exit_code, 0, 'Exit code is not 0')
 
         # Parse the JSON output
-        stdout_dict = json.loads(stdout)
+        try:
+            stdout_dict = json.loads(stdout)
+        except:  # noqa: E722
+            self.fail(f'Output:\n\n{stdout}\n\nFailed to parse output as JSON')
 
         # Check the content of the output
         self.helper_test_query_dict(stdout_dict)
 
-    def test_query_yaml(self) -> None:
-        # Patch stdout to capture the output
-        with patch('sys.stdout', StringIO()) as mock_stdout:
-            query(output_format=RateLimitOutputFormat.YAML)
-        stdout = mock_stdout.getvalue()
+    def test_cli_query_yaml(self) -> None:
+        argv = ['docker_rate_limit_check', 'query', '--format', 'yaml']
+        exit_code, stdout = self.helper_execute_cli(argv)
 
-        # Parse the JSON output
-        stdout_dict = yaml.safe_load(stdout)
+        # Check the exit code
+        self.assertEqual(exit_code, 0, 'Exit code is not 0')
+
+        # Parse the YAML output
+        try:
+            stdout_dict = yaml.safe_load(stdout)
+        except:  # noqa: E722
+            self.fail(f'Output:\n\n{stdout}\n\nFailed to parse output as YAML')
 
         # Check the content of the output
         self.helper_test_query_dict(stdout_dict)
 
-    def test_query_prometheus(self) -> None:
-        # Patch stdout to capture the output
-        with patch('sys.stdout', StringIO()) as mock_stdout:
-            query(output_format=RateLimitOutputFormat.PROMETHEUS)
-        stdout = mock_stdout.getvalue()
+    def test_cli_query_prometheus(self) -> None:
+        argv = ['docker_rate_limit_check', 'query', '--format', 'prometheus']
+        exit_code, stdout = self.helper_execute_cli(argv)
+
+        # Check the exit code
+        self.assertEqual(exit_code, 0, 'Exit code is not 0')
 
         # Regular expressions to match HELP and metric lines
         help_pattern = re.compile(r'^# HELP .*$')
