@@ -12,6 +12,7 @@ RUN apt-get update && \
 
 RUN mkdir /app
 ENV PYTHONUNBUFFERED=TRUE
+ENV PYTHONDONTWRITEBYTECODE=1
 WORKDIR /app
 
 # Install pip requirements
